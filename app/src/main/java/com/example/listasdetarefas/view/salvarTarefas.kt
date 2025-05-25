@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.listasdetarefas.componentes.Botao
 import com.example.listasdetarefas.componentes.CaixaDeTexto
+import com.example.listasdetarefas.constantes.Constantes
 import com.example.listasdetarefas.repositorio.TarefaRepositorio
 import com.example.listasdetarefas.ui.theme.Purple40
 import com.example.listasdetarefas.ui.theme.RADIO_BUTTON_GREEN_DISABLED
@@ -161,32 +162,35 @@ fun SalvarTarefas(
             }
             Botao(
                 onClick = {
-                    var mensagem = true
-
                     scope.launch {
-                        if (tituloTarefa.isEmpty()) {
+                        if (tituloTarefa.isBlank()) {
                             Toast.makeText(context, "Título da tarefa é obrigatório!", Toast.LENGTH_SHORT).show()
                             return@launch
                         }
 
-                        if (descricaoTarefa.isEmpty()) {
+                        if (descricaoTarefa.isBlank()) {
                             Toast.makeText(context, "Descrição da tarefa é obrigatória!", Toast.LENGTH_SHORT).show()
                             return@launch
                         }
 
-                        // Verifica se prioridade está entre 0 e 2 (válido)
-                        if (prioridadeSelecionada !in 0..2) {
-                            Toast.makeText(context, "Selecione uma prioridade válida!", Toast.LENGTH_SHORT).show()
-                            return@launch
+                        // Determina a prioridade: se nenhuma marcada, será SEM_PRIORIDADE
+                        val prioridadeFinal = if (prioridadeSelecionada in 1..3) {
+                            prioridadeSelecionada
+                        } else {
+                            Constantes.SEM_PRIORIDADE
                         }
 
-                        // Salvar tarefa em IO
+                        // Salvar em background
                         launch(Dispatchers.IO) {
-                            tarefasRepositorio.salvarTarefa(tituloTarefa, descricaoTarefa, prioridadeSelecionada)
+                            tarefasRepositorio.salvarTarefa(
+                                tituloTarefa,
+                                descricaoTarefa,
+                                prioridadeFinal
+                            )
                         }
-
-                        // Mostra mensagem de sucesso na thread principal
-                        Toast.makeText(context, "Sucesso ao salvar a tarefa!", Toast.LENGTH_SHORT).show()
+                        // Mensagem de sucesso
+                        Toast.makeText(context, "Tarefa salva com sucesso!", Toast.LENGTH_SHORT).show()
+                        navController.popBackStack()
                     }
                 },
                 modifier = Modifier
@@ -195,6 +199,7 @@ fun SalvarTarefas(
                     .padding(20.dp),
                 texto = "Salvar"
             )
+
         }
     }
 

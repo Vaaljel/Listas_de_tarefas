@@ -64,34 +64,12 @@ fun ListaTarefas(
             }
         }
     ) { paddingValues ->
-        val listaTarefas: MutableList<Tarefa> = mutableListOf(
-            Tarefa(
-                tarefa = "Jogar futbol",
-                descricao = "giydfyfyikfik",
-                prioridade = 0
-            ),
-            Tarefa(
-                tarefa = "Ir ao cinema",
-                descricao = "giydfyfyikfik",
-                prioridade = 1
-            ),
-            Tarefa(
-                tarefa = "ir a universidade",
-                descricao = "giydfyfyikfik",
-                prioridade = 2
-            ),
-            Tarefa(
-                tarefa = "tarefa 5",
-                descricao = "giydfyfyikfik",
-                prioridade = 3
-            )
-        )
+
         LazyColumn(
             modifier = Modifier.padding(paddingValues)
         ) {
-            itemsIndexed(listaTarefas){ position, _ ->
-                TarefaItem(position, listaTarefas)
+
             }
-        }
+
     }
 }
