@@ -1,5 +1,4 @@
 plugins {
-
     id("com.google.gms.google-services")
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -42,8 +41,6 @@ android {
 }
 
 dependencies {
-
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -54,7 +51,6 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.firebase.common.ktx)
-    //implementation(libs.androidx.navigation.compose.jvmstubs)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -64,16 +60,15 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     val nav_version = "2.9.0"
-
     // Jetpack Compose integration
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
+    // Firebase BOM - gerencia as versões automaticamente
     implementation(platform("com.google.firebase:firebase-bom:33.14.0"))
 
+    // Firebase dependencies (sem especificar versão devido ao BOM)
     implementation("com.google.firebase:firebase-firestore")
-
-
-
+    implementation("com.google.firebase:firebase-auth")
 }

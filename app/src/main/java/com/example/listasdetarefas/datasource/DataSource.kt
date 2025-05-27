@@ -15,10 +15,14 @@ class DataSource {
             "descricao" to descricao,
             "prioridade" to prioridade
         )
-        db.collection("tarefa").document(tarefa).set(tarefaMap).addOnCompleteListener {
-
-        }.addOnFailureListener {
-
+        db.collection("tarefa").document(tarefa).set(tarefaMap).addOnCompleteListener { task ->
+            if(task.isSuccessful){
+                println("Tarefa salva com sucesso!")
+            } else {
+                println("Erro ao salvar: ${task.exception?.message}")
+            }
+        }.addOnFailureListener { exception ->
+            println("Falha ao salvar: ${exception.message}")
         }
     }
 

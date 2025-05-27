@@ -161,36 +161,43 @@ fun SalvarTarefas(
                 )
             }
             Botao(
-                onClick = {
-                    scope.launch {
-                        if (tituloTarefa.isBlank()) {
-                            Toast.makeText(context, "Título da tarefa é obrigatório!", Toast.LENGTH_SHORT).show()
-                            return@launch
-                        }
+                onClick = onClick@{
+                    // Validações primeiro
+                    if (tituloTarefa.isBlank()) {
+                        Toast.makeText(context, "Título da tarefa é obrigatório!", Toast.LENGTH_SHORT).show()
+                        return@onClick
+                    }
 
-                        if (descricaoTarefa.isBlank()) {
-                            Toast.makeText(context, "Descrição da tarefa é obrigatória!", Toast.LENGTH_SHORT).show()
-                            return@launch
-                        }
+                    if (descricaoTarefa.isBlank()) {
+                        Toast.makeText(context, "Descrição da tarefa é obrigatória!", Toast.LENGTH_SHORT).show()
+                        return@onClick
+                    }
 
-                        // Determina a prioridade: se nenhuma marcada, será SEM_PRIORIDADE
-                        val prioridadeFinal = if (prioridadeSelecionada in 1..3) {
-                            prioridadeSelecionada
-                        } else {
-                            Constantes.SEM_PRIORIDADE
-                        }
+                    // Determina a prioridade
+                    val prioridadeFinal = if (prioridadeSelecionada in 1..3) {
+                        prioridadeSelecionada
+                    } else {
+                        Constantes.SEM_PRIORIDADE
+                    }
 
-                        // Salvar em background
-                        launch(Dispatchers.IO) {
-                            tarefasRepositorio.salvarTarefa(
-                                tituloTarefa,
-                                descricaoTarefa,
-                                prioridadeFinal
-                            )
+                    // Debug print
+                    println(" Tentando salvar tarefa: $tituloTarefa")
+                    println(" Descrição: $descricaoTarefa")
+                    println(" Prioridade: $prioridadeFinal")
+
+                    // Salvar tarefa
+                    scope.launch(Dispatchers.IO) {
+                        tarefasRepositorio.salvarTarefa(
+                            tituloTarefa,
+                            descricaoTarefa,
+                            prioridadeFinal
+                        )
+
+                        // Voltar para Main thread para mostrar Toast e navegar
+                        launch(Dispatchers.Main) {
+                            Toast.makeText(context, "Tarefa salva com sucesso!", Toast.LENGTH_SHORT).show()
+                            navController.popBackStack()
                         }
-                        // Mensagem de sucesso
-                        Toast.makeText(context, "Tarefa salva com sucesso!", Toast.LENGTH_SHORT).show()
-                        navController.popBackStack()
                     }
                 },
                 modifier = Modifier
